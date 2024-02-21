@@ -1,0 +1,11 @@
+[syscon]
+address = 0x400fe000
+size = 0x1000
+
+[gpioabcd]
+address = 0x40004000
+size = 0x4000
+
+[gpioef]
+address = 0x40024000
+size = 0x2000

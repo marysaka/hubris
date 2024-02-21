@@ -1,0 +1,69 @@
+name = "demo-tiva-c"
+target = "thumbv7em-none-eabihf"
+board = "tiva-c"
+chip = "../../chips/tm4c123gxl"
+stacksize = 896
+
+[kernel]
+name = "demo-tiva-c"
+requires = {flash = 32768, ram = 8192}
+
+[tasks.jefe]
+name = "task-jefe"
+priority = 0
+max-sizes = {flash = 8192, ram = 2048}
+start = true
+stacksize = 1536
+notifications = ["fault", "timer"]
+
+[tasks.syscon_driver]
+name = "drv-tm4c123g-syscon"
+priority = 2
+max-sizes = {flash = 8192, ram = 2048}
+uses = ["syscon"]
+start = true
+stacksize = 1000
+task-slots = ["jefe"]
+
+[tasks.gpio_driver]
+name = "drv-tm4c123g-gpio"
+priority = 3
+max-sizes = {flash = 8192, ram = 2048}
+uses = ["gpioabcd", "gpioef"]
+start = true
+stacksize = 1000
+task-slots = ["syscon_driver"]
+
+[tasks.user_leds]
+name = "drv-user-leds"
+features = ["tm4c123g"]
+priority = 4
+max-sizes = {flash = 8192, ram = 1024}
+start = true
+task-slots = ["gpio_driver"]
+notifications = ["timer"]
+
+[tasks.ping]
+name = "task-ping"
+features = []
+priority = 6
+max-sizes = {flash = 8192, ram = 1024}
+stacksize = 512
+start = true
+task-slots = [{peer = "pong"}]
+
+[tasks.pong]
+name = "task-pong"
+priority = 5
+max-sizes = {flash = 8192, ram = 1024}
+start = true
+task-slots = ["user_leds"]
+notifications = ["timer"]
+
+[tasks.idle]
+name = "task-idle"
+priority = 9
+max-sizes = {flash = 128, ram = 256}
+stacksize = 256
+start = true
+

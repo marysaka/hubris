@@ -87,6 +87,7 @@ cfg_if::cfg_if! {
         target_board = "psc-b",
         target_board = "psc-c",
         target_board = "oxcon2023g0",
+        target_board = "tiva-c",
     ))] {
         #[derive(enum_map::Enum, Copy, Clone, FromPrimitive)]
         enum Led {
@@ -686,6 +687,68 @@ fn led_toggle(led: Led) {
 
     let pin = led_gpio_num(led);
     gpio_driver.toggle(pin).unwrap_lite();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// The TM4C123G specific bits.
+
+cfg_if::cfg_if! {
+    if #[cfg(feature = "tm4c123g")] {
+        task_slot!(GPIO, gpio_driver);
+
+        cfg_if::cfg_if! {
+            if #[cfg(target_board = "tiva-c")] {
+                const LED_ZERO_PIN: drv_tm4c123g_gpio_api::Pin = drv_tm4c123g_gpio_api::Pin::GPIOF_1;
+                const LED_OFF_VAL: drv_tm4c123g_gpio_api::Value = drv_tm4c123g_gpio_api::Value::One;
+                const LED_ON_VAL: drv_tm4c123g_gpio_api::Value = drv_tm4c123g_gpio_api::Value::Zero;
+            } else {
+                compile_error!("no LED mapping for unknown board");
+            }
+        }
+    }
+}
+
+#[cfg(feature = "tm4c123g")]
+fn enable_led_pins() {
+    use drv_tm4c123g_gpio_api::*;
+
+    let gpio_driver = GPIO.get_task_id();
+    let gpio_driver = Gpios::from(gpio_driver);
+
+    gpio_driver.gpio_configure_output(
+        LED_ZERO_PIN,
+        OutputType::PushPull,
+        Speed::Low,
+        Pull::Up,
+    );
+    led_off(Led::Zero);
+}
+
+#[cfg(feature = "tm4c123g")]
+fn led_on(led: Led) {
+    assert!(matches!(led, Led::Zero));
+
+    let gpio_driver = GPIO.get_task_id();
+    let gpio_driver = drv_tm4c123g_gpio_api::Gpios::from(gpio_driver);
+    gpio_driver.set_val(LED_ZERO_PIN, LED_ON_VAL);
+}
+
+#[cfg(feature = "tm4c123g")]
+fn led_off(led: Led) {
+    assert!(matches!(led, Led::Zero));
+
+    let gpio_driver = GPIO.get_task_id();
+    let gpio_driver = drv_tm4c123g_gpio_api::Gpios::from(gpio_driver);
+    gpio_driver.set_val(LED_ZERO_PIN, LED_OFF_VAL);
+}
+
+#[cfg(feature = "tm4c123g")]
+fn led_toggle(led: Led) {
+    assert!(matches!(led, Led::Zero));
+
+    let gpio_driver = GPIO.get_task_id();
+    let gpio_driver = drv_tm4c123g_gpio_api::Gpios::from(gpio_driver);
+    gpio_driver.toggle(LED_ZERO_PIN).unwrap_lite();
 }
 
 mod idl {

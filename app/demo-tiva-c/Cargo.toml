@@ -1,0 +1,27 @@
+[package]
+edition = "2021"
+readme = "README.md"
+name = "demo-tiva-c"
+version = "0.1.0"
+
+[features]
+dump = ["kern/dump"]
+
+[dependencies]
+cfg-if = { workspace = true }
+cortex-m = { workspace = true, features = ["critical-section-single-core"] }
+cortex-m-rt = { workspace = true }
+cortex-m-semihosting = { workspace = true }
+boxxo = { workspace = true, features = ["rt", "critical-section"] }
+
+kern = { path = "../../sys/kern" }
+
+[build-dependencies]
+build-util = {path = "../../build/util"}
+
+# this lets you use `cargo fix`!
+[[bin]]
+name = "demo-tiva-c"
+test = false
+doctest = false
+bench = false

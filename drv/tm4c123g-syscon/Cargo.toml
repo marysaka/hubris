@@ -1,0 +1,26 @@
+[package]
+name = "drv-tm4c123g-syscon"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m = { workspace = true }
+idol-runtime = { workspace = true }
+boxxo = { workspace = true }
+num-traits = { workspace = true }
+zerocopy = { workspace = true }
+
+drv-tm4c123g-syscon-api = { path = "../tm4c123g-syscon-api" }
+task-jefe-api = { path = "../../task/jefe-api" }
+userlib = { path = "../../sys/userlib", features = ["panic-messages"] }
+
+[build-dependencies]
+idol = { workspace = true }
+
+# This section is here to discourage RLS/rust-analyzer from doing test builds,
+# since test builds don't work for cross compilation.
+[[bin]]
+name = "drv-tm4c123g-syscon"
+test = false
+doctest = false
+bench = false

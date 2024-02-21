@@ -77,7 +77,7 @@ version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c041a8d9751a520ee19656232a18971f18946a7900f1520ee4400002244dd89"
 dependencies = [
- "critical-section",
+ "critical-section 0.2.7",
 ]
 
 [[package]]
@@ -200,6 +200,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0bf7fe51849ea569fd452f37822f606a5cabb684dc918707a0193fd4664ff324"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "boxxo"
+version = "0.1.0"
+source = "git+https://github.com/marysaka/boxxo?branch=hubris#906c8e61160764150bb9daebb459ba0e7d7fd8da"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "critical-section 1.1.2",
+ "vcell",
 ]
 
 [[package]]
@@ -432,12 +443,13 @@ checksum = "f9236877021b66ad90f833d8a73a7acb702b985b64c5986682d9f1f1a184f0fb"
 
 [[package]]
 name = "cortex-m"
-version = "0.7.5"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cd20d4ac4aa86f4f75f239d59e542ef67de87cce2c282818dc6e84155d3ea126"
+checksum = "8ec610d8f49840a5b376c69663b6369e71f4b34484b9b2eb29fb918d92516cb9"
 dependencies = [
  "bare-metal 0.2.5",
  "bitfield 0.13.2",
+ "critical-section 1.1.2",
  "embedded-hal",
  "volatile-register",
 ]
@@ -461,6 +473,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.94",
+]
+
+[[package]]
+name = "cortex-m-semihosting"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c23234600452033cc77e4b761e740e02d2c4168e11dbf36ab14a0f58973592b0"
+dependencies = [
+ "cortex-m",
 ]
 
 [[package]]
@@ -513,6 +534,12 @@ dependencies = [
  "cortex-m",
  "riscv",
 ]
+
+[[package]]
+name = "critical-section"
+version = "1.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7059fff8937831a9ae6f0fe4d658ffabf58f2ca96aa9dec1c889f936f705f216"
 
 [[package]]
 name = "crossbeam-utils"
@@ -647,6 +674,19 @@ dependencies = [
  "drv-stm32h7-startup",
  "kern",
  "stm32h7",
+]
+
+[[package]]
+name = "demo-tiva-c"
+version = "0.1.0"
+dependencies = [
+ "boxxo",
+ "build-util",
+ "cfg-if",
+ "cortex-m",
+ "cortex-m-rt",
+ "cortex-m-semihosting",
+ "kern",
 ]
 
 [[package]]
@@ -1932,6 +1972,60 @@ dependencies = [
 ]
 
 [[package]]
+name = "drv-tm4c123g-gpio"
+version = "0.1.0"
+dependencies = [
+ "boxxo",
+ "drv-tm4c123g-gpio-api",
+ "drv-tm4c123g-syscon-api",
+ "idol",
+ "idol-runtime",
+ "num-traits",
+ "userlib",
+ "zerocopy 0.6.4",
+]
+
+[[package]]
+name = "drv-tm4c123g-gpio-api"
+version = "0.1.0"
+dependencies = [
+ "build-util",
+ "cfg-if",
+ "derive-idol-err",
+ "idol",
+ "idol-runtime",
+ "num-traits",
+ "userlib",
+ "zerocopy 0.6.4",
+]
+
+[[package]]
+name = "drv-tm4c123g-syscon"
+version = "0.1.0"
+dependencies = [
+ "boxxo",
+ "cortex-m",
+ "drv-tm4c123g-syscon-api",
+ "idol",
+ "idol-runtime",
+ "num-traits",
+ "task-jefe-api",
+ "userlib",
+ "zerocopy 0.6.4",
+]
+
+[[package]]
+name = "drv-tm4c123g-syscon-api"
+version = "0.1.0"
+dependencies = [
+ "build-util",
+ "idol",
+ "num-traits",
+ "userlib",
+ "zerocopy 0.6.4",
+]
+
+[[package]]
 name = "drv-transceivers-api"
 version = "0.1.0"
 dependencies = [
@@ -2003,6 +2097,7 @@ dependencies = [
  "cfg-if",
  "drv-lpc55-gpio-api",
  "drv-stm32xx-sys-api",
+ "drv-tm4c123g-gpio-api",
  "drv-user-leds-api",
  "enum-map",
  "idol",
