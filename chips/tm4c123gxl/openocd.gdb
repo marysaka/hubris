@@ -10,4 +10,3 @@ set backtrace limit 32
 break HardFault
 
 monitor arm semihosting enable
-monitor semihosting IOClient 3

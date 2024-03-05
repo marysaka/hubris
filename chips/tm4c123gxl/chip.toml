@@ -9,3 +9,8 @@ size = 0x4000
 [gpioef]
 address = 0x40024000
 size = 0x2000
+
+[uart]
+address = 0x4000C000
+size = 0x8000
+interrupts = { uart0irq = 5, uart1irq = 6, uart2irq = 33, uart3irq = 59, uart4irq = 60, uart5irq = 61, uart6irq = 62, uart7irq = 63 }
